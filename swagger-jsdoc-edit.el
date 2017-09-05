@@ -51,7 +51,7 @@
   (interactive)
   (let* ((beg (or (search-backward "/**" nil t) (line-beginning-position)))
          (end (or (search-forward "*/" nil t) (line-end-position)))
-         (yaml (dg-jsdoc-to-yaml (buffer-substring-no-properties beg end)))
+         (yaml (sje/jsdoc-to-yaml (buffer-substring-no-properties beg end)))
          (yaml-buffer (get-buffer-create sje/edit-buffer)))
     (setq sje/window-configuration (current-window-configuration))
     (setq sje/main-buffer (current-buffer))
@@ -82,8 +82,8 @@
       (let* ((command "validate")
              (file (make-temp-file "sje"))
              (yaml (buffer-substring-no-properties (point-min) (point-max)))
-             (preamble (s-join "\n" '("swagger: \"2.0\"" "info:" "  version: version" "  title: title" "host: host" "basePath: /basePath" "")))
-             (swagger (s-concat preamble yaml))
+             (preamble (s-join "\n" '("swagger: \"2.0\"" "info:" "  version: version" "  title: title" "host: host" "basePath: /basePath" "paths:" "")))
+             (swagger (s-concat preamble (s-join "\n" (--map (s-prepend "  " it) (s-split "\n" yaml)))))
              (result))
         (f-write-text swagger 'utf-8 file)
         (setq result (shell-command-to-string
@@ -96,9 +96,9 @@
 
 (defun sje/update-swagger ()
   (interactive)
-  (let ((jsdoc (dg-yaml-to-jsdoc (buffer-substring-no-properties (point-min) (point-max)))))
+  (let ((jsdoc (sje/yaml-to-jsdoc (buffer-substring-no-properties (point-min) (point-max)))))
     (when sje/swagger-tools-binary
-      (dg-validate-swagger))
+      (sje/validate-swagger))
     (kill-buffer sje/edit-buffer)
     (with-current-buffer sje/main-buffer
       (apply 'delete-region sje/region)
