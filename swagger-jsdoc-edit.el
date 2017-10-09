@@ -97,8 +97,8 @@
 (defun sje/update-swagger ()
   (interactive)
   (let ((jsdoc (sje/yaml-to-jsdoc (buffer-substring-no-properties (point-min) (point-max)))))
-    (when sje/swagger-tools-binary
-      (sje/validate-swagger))
+    ;; (when sje/swagger-tools-binary
+    ;;   (sje/validate-swagger))
     (kill-buffer sje/edit-buffer)
     (with-current-buffer sje/main-buffer
       (apply 'delete-region sje/region)
