@@ -10,12 +10,12 @@ comment with the updated yaml, properly formatted and everything.
 
 ## usage
 
-by default, the `sje/js-keymap` for the js minor mode binds `C-c C-c`
-but you may have another js2 mode binding for that. In which case,
+Define a keybind for the edit-shortcut, and then add a js2-mode hook
+to turn on this mode:
 
 ```elisp
+(require 'swagger-jsdoc-edit)
 (setq sje/edit-shortcut (kbd "C-c C-n"))
-(sje/update-bindings)
 
 (add-hook 'js2-mode-hook (lambda () (sje/js-mode t)))
 ```
@@ -23,15 +23,15 @@ but you may have another js2 mode binding for that. In which case,
 after which, when you're in a js2-mode file, when you're in the middle
 of a yaml swagger partial, hit the `sje/edit-shortcut` to pop out into
 a separate buffer to edit yaml and validate some swagger `paths`
-partials :D
+partials
 
 In the new buffer, the following keybinds are available
 
-| key     | action               |
-| ---     | ---                  |
-| M-s     | sje/update-swagger   |
-| C-c C-c | sje/update-swagger   |
-| C-c C-v | sje/validate-swagger |
+| key                             | action               |
+| ---                             | ---                  |
+| M-s                             | sje/update-swagger   |
+| C-c C-c (or whatever you chose) | sje/update-swagger   |
+| C-c C-v                         | sje/validate-swagger |
 
 If you have node's [`swagger-tools`][st] installed, we'll use that for
 validation automatically before `sje/update-swagger`, or you can call
